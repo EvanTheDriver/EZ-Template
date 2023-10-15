@@ -1,32 +1,50 @@
 #include "main.h"
+#include "autons.cpp"
+pros::Motor cataMotor(11,1);
+pros::Motor intakeMotor(20,1); 
+pros::Controller master(pros::E_CONTROLLER_MASTER);
 
+pros::Rotation cataRotation(1);
+
+pros::ADIDigitalOut WingsRIGHT(3);
+pros::ADIDigitalOut WingsLEFT(4);
+pros::ADIDigitalOut IntLEFT(2);
+pros::ADIDigitalOut IntRIGHT(1);
+
+
+/**
+ * Runs initialization code. This occurs as soon as the program is started.
+ *
+ * All other competition modes are blocked by initialize; it is recommended
+ * to keep execution time for this mode under a few seconds.
+ */
 
 // Chassis constructor
 Drive chassis (
   // Left Chassis Ports (negative port will reverse it!)
   //   the first port is the sensored port (when trackers are not used!)
-  {-15, -16}
+  {-19, -16, 18}
 
   // Right Chassis Ports (negative port will reverse it!)
   //   the first port is the sensored port (when trackers are not used!)
-  ,{6, 5}
+  ,{14, 12, -13}
 
   // IMU Port
-  ,20
+  ,15
 
   // Wheel Diameter (Remember, 4" wheels are actually 4.125!)
   //    (or tracking wheel diameter)
-  ,2.5
+  ,3.25
 
   // Cartridge RPM
   //   (or tick per rotation if using tracking wheels)
-  ,1200
+  ,600
 
   // External Gear Ratio (MUST BE DECIMAL)
   //    (or gear ratio of tracking wheel)
   // eg. if your drive is 84:36 where the 36t is powered, your RATIO would be 2.333.
   // eg. if your drive is 36:60 where the 60t is powered, your RATIO would be 0.6.
-  ,2
+  ,1.66666666667
 
 
   // Uncomment if using tracking wheels
@@ -64,7 +82,8 @@ void initialize() {
   chassis.set_active_brake(0); // Sets the active brake kP. We recommend 0.1.
   chassis.set_curve_default(0, 0); // Defaults for curve. If using tank, only the first parameter is used. (Comment this line out if you have an SD card!)  
   default_constants(); // Set the drive to your own constants from autons.cpp!
-
+  WingsLEFT.set_value(1); 
+	WingsRIGHT.set_value(1);
   // These are already defaulted to these buttons, but you can change the left/right curve buttons here!
   // chassis.set_left_curve_buttons (pros::E_CONTROLLER_DIGITAL_LEFT, pros::E_CONTROLLER_DIGITAL_RIGHT); // If using tank, only the left side is used. 
   // chassis.set_right_curve_buttons(pros::E_CONTROLLER_DIGITAL_Y,    pros::E_CONTROLLER_DIGITAL_A);
@@ -123,14 +142,53 @@ void competition_initialize() {
  * If the robot is disabled or communications is lost, the autonomous task
  * will be stopped. Re-enabling the robot will restart the task, not re-start it
  * from where it left off.
- */
+ */  
+
+void defauto(){
+  chassis.reset_pid_targets(); // Resets PID targets to 0
+  chassis.reset_gyro(); // Reset gyro position to 0
+  chassis.reset_drive_sensor(); // Reset drive sensors to 0
+  chassis.set_drive_brake(MOTOR_BRAKE_HOLD); // Set motors to hold.  This helps autonomous consistency.
+  // defense
+  chassis.set_drive_pid(25, DRIVE_SPEED, true);
+  chassis.wait_drive();
+  intakeMotor = 127;
+  delay(500);
+  intakeMotor = 0;
+  chassis.set_turn_pid(45, TURN_SPEED);
+  chassis.wait_drive();
+  WingsLEFT.set_value(1);
+  WingsRIGHT.set_value(1);
+  chassis.set_drive_pid(13, DRIVE_SPEED, true);
+  chassis.wait_drive();  
+
+}
 void autonomous() {
   chassis.reset_pid_targets(); // Resets PID targets to 0
   chassis.reset_gyro(); // Reset gyro position to 0
   chassis.reset_drive_sensor(); // Reset drive sensors to 0
   chassis.set_drive_brake(MOTOR_BRAKE_HOLD); // Set motors to hold.  This helps autonomous consistency.
+// offense
+  chassis.set_drive_pid(25, DRIVE_SPEED, true);
+  chassis.wait_drive(); //first ball in
+  chassis.set_drive_pid(-12, DRIVE_SPEED, true);
+  chassis.wait_drive();
+  chassis.set_turn_pid(-90, TURN_SPEED);
+  chassis.wait_drive();
+  chassis.set_drive_pid(11, DRIVE_SPEED, true);
+  chassis.wait_drive();
+  chassis.set_turn_pid(90, TURN_SPEED);
+  chassis.wait_drive();
+  chassis.set_drive_pid(38, DRIVE_SPEED, true);
+  chassis.wait_drive();
+  intakeMotor = 127;
+  delay(500);
+  intakeMotor = 0;
+  chassis.set_turn_pid(90, TURN_SPEED);
+  chassis.wait_drive();
+  chassis.set_drive_pid(14, DRIVE_SPEED, true);
+  chassis.wait_drive();  //second ball
 
-  ez::as::auton_selector.call_selected_auton(); // Calls selected auton from autonomous selector.
 }
 
 
@@ -149,20 +207,54 @@ void autonomous() {
  * task, not resume it from where it left off.
  */
 void opcontrol() {
+  bool  wingPosition= false;
   // This is preference to what you like to drive on.
   chassis.set_drive_brake(MOTOR_BRAKE_COAST);
 
   while (true) {
 
-    chassis.tank(); // Tank control
+    // chassis.tank(); // Tank control
     // chassis.arcade_standard(ez::SPLIT); // Standard split arcade
-    // chassis.arcade_standard(ez::SINGLE); // Standard single arcade
+    chassis.arcade_standard(ez::SINGLE); // Standard single arcade
     // chassis.arcade_flipped(ez::SPLIT); // Flipped split arcade
     // chassis.arcade_flipped(ez::SINGLE); // Flipped single arcade
 
-    // . . .
-    // Put more user control code here!
-    // . . .
+    if (master.get_digital_new_press(DIGITAL_L2)){
+        wingPosition = !wingPosition;
+        IntRIGHT.set_value(wingPosition);
+        IntLEFT.set_value(wingPosition);
+    }
+
+
+    if (master.get_digital(DIGITAL_R1)){
+        intakeMotor = 127;
+    }
+    else if (master.get_digital(DIGITAL_R2)){
+        intakeMotor = -127;
+    }
+    else {
+      intakeMotor = 0;
+    }
+
+    if (master.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_Y)< -10){
+      WingsLEFT.set_value(1);
+      WingsRIGHT.set_value(1);
+    }
+    else if(master.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_Y)> 0){
+      WingsLEFT.set_value(0);
+      WingsRIGHT.set_value(0);
+    }
+    if(master.get_digital(DIGITAL_L1) == 1){
+			cataMotor = 127;
+		}
+		else{
+			if(cataRotation.get_angle() < 17420){
+				cataMotor = 120;
+			}
+			else{
+				cataMotor = 0;
+			}
+		}
 
     pros::delay(ez::util::DELAY_TIME); // This is used for timer calculations!  Keep this ez::util::DELAY_TIME
   }
