@@ -1,3 +1,4 @@
+#pragma once
 /**
  * \file main.h
  *
@@ -89,8 +90,6 @@ extern pros::Controller master;
 
 extern pros::Rotation cataRotation;
 
-extern pros::ADIDigitalOut WingsLEFT;
-extern pros::ADIDigitalOut WingsRIGHT;
-extern pros::ADIDigitalOut IntLEFT;
+extern pros::ADIDigitalOut Wings;
 
 #endif  // _PROS_MAIN_H_

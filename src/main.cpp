@@ -1,15 +1,11 @@
 #include "main.h"
-#include "autons.cpp"
 pros::Motor cataMotor(11,1);
-pros::Motor intakeMotor(20,1); 
+pros::Motor intakeMotor(9,1); 
 pros::Controller master(pros::E_CONTROLLER_MASTER);
 
 pros::Rotation cataRotation(1);
 
-pros::ADIDigitalOut WingsRIGHT(3);
-pros::ADIDigitalOut WingsLEFT(4);
-pros::ADIDigitalOut IntLEFT(2);
-pros::ADIDigitalOut IntRIGHT(1);
+pros::ADIDigitalOut Wings(1);
 
 
 /**
@@ -81,9 +77,9 @@ void initialize() {
   chassis.toggle_modify_curve_with_controller(true); // Enables modifying the controller curve with buttons on the joysticks
   chassis.set_active_brake(0); // Sets the active brake kP. We recommend 0.1.
   chassis.set_curve_default(0, 0); // Defaults for curve. If using tank, only the first parameter is used. (Comment this line out if you have an SD card!)  
-  default_constants(); // Set the drive to your own constants from autons.cpp!
-  WingsLEFT.set_value(1); 
-	WingsRIGHT.set_value(1);
+  default_constants(); 
+  Wings.set_value(0);
+  // Set the drive to your own constants from autons.cpp!
   // These are already defaulted to these buttons, but you can change the left/right curve buttons here!
   // chassis.set_left_curve_buttons (pros::E_CONTROLLER_DIGITAL_LEFT, pros::E_CONTROLLER_DIGITAL_RIGHT); // If using tank, only the left side is used. 
   // chassis.set_right_curve_buttons(pros::E_CONTROLLER_DIGITAL_Y,    pros::E_CONTROLLER_DIGITAL_A);
@@ -157,8 +153,7 @@ void defauto(){
   intakeMotor = 0;
   chassis.set_turn_pid(45, TURN_SPEED);
   chassis.wait_drive();
-  WingsLEFT.set_value(1);
-  WingsRIGHT.set_value(1);
+  Wings.set_value(1);
   chassis.set_drive_pid(13, DRIVE_SPEED, true);
   chassis.wait_drive();  
 
@@ -221,34 +216,24 @@ void opcontrol() {
 
     if (master.get_digital_new_press(DIGITAL_L2)){
         wingPosition = !wingPosition;
-        IntRIGHT.set_value(wingPosition);
-        IntLEFT.set_value(wingPosition);
+        Wings.set_value(wingPosition);
     }
 
 
-    if (master.get_digital(DIGITAL_R1)){
+    if (master.get_digital(DIGITAL_R1) == 1){
         intakeMotor = 127;
     }
-    else if (master.get_digital(DIGITAL_R2)){
+    else if (master.get_digital(DIGITAL_R2) == 1){
         intakeMotor = -127;
     }
     else {
       intakeMotor = 0;
     }
-
-    if (master.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_Y)< -10){
-      WingsLEFT.set_value(1);
-      WingsRIGHT.set_value(1);
-    }
-    else if(master.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_Y)> 0){
-      WingsLEFT.set_value(0);
-      WingsRIGHT.set_value(0);
-    }
     if(master.get_digital(DIGITAL_L1) == 1){
 			cataMotor = 127;
 		}
 		else{
-			if(cataRotation.get_angle() < 17420){
+			if(cataRotation.get_angle() < 17430){
 				cataMotor = 120;
 			}
 			else{

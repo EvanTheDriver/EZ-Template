@@ -234,7 +234,7 @@ void Drive::arcade_standard(e_type stick_type) {
   } else if (stick_type == SINGLE) {
     // Put the joysticks through the curve function
     fwd_stick = left_curve_function(master.get_analog(ANALOG_LEFT_Y));
-    turn_stick = right_curve_function(master.get_analog(ANALOG_LEFT_X));
+    turn_stick = right_curve_function(master.get_analog(ANALOG_LEFT_X)*.7);
   }
 
   // Set robot to l_stick and r_stick, check joystick threshold, set active brake
