@@ -163,26 +163,112 @@ void autonomous() {
   chassis.reset_gyro(); // Reset gyro position to 0
   chassis.reset_drive_sensor(); // Reset drive sensors to 0
   chassis.set_drive_brake(MOTOR_BRAKE_HOLD); // Set motors to hold.  This helps autonomous consistency.
+
+//Auto skills
+/*cataMotor = 115;
+delay(40000);
+cataMotor = 0;
+chassis.set_drive_pid(-5, DRIVE_SPEED, true);
+chassis.wait_drive();
+chassis.set_turn_pid(30, TURN_SPEED);
+chassis.wait_drive();
+chassis.set_drive_pid(-87, DRIVE_SPEED, true);
+chassis.wait_drive();
+chassis.set_turn_pid(90, TURN_SPEED);
+chassis.wait_drive();
+chassis.set_drive_pid(55, DRIVE_SPEED, true);
+chassis.wait_drive();
+chassis.set_turn_pid(187, TURN_SPEED);
+chassis.wait_drive();
+Wings.set_value(1);
+chassis.set_drive_pid(32, DRIVE_SPEED, true);
+chassis.wait_drive();
+Wings.set_value(0);
+chassis.set_drive_pid(-24, DRIVE_SPEED, true);
+chassis.wait_drive();
+chassis.set_drive_pid(28, DRIVE_SPEED, true);
+chassis.wait_drive();
+chassis.set_drive_pid(-12, DRIVE_SPEED, true);*/
+
+//defence
+/*intakeMotor = 127;
+chassis.set_drive_pid(50.5, DRIVE_SPEED, true);
+chassis.wait_drive();
+delay(700);
+intakeMotor = 0;
+chassis.set_drive_pid(-57, DRIVE_SPEED, true);
+chassis.wait_drive();
+chassis.set_turn_pid(-52, TURN_SPEED);
+chassis.wait_drive();
+Wings.set_value(1);
+chassis.set_drive_pid(24, DRIVE_SPEED, true);
+chassis.wait_drive();
+Wings.set_value(0);
+chassis.set_turn_pid(-43, TURN_SPEED);
+chassis.wait_drive();
+chassis.set_drive_pid(19, DRIVE_SPEED, true);
+chassis.wait_drive();
+chassis.set_drive_pid(-8, DRIVE_SPEED, true);
+chassis.wait_drive();
+chassis.set_turn_pid(78, TURN_SPEED);
+chassis.wait_drive();
+chassis.set_drive_pid(35, DRIVE_SPEED, true);
+chassis.wait_drive();
+intakeMotor = -127;
+chassis.set_drive_pid(17, DRIVE_SPEED, true);
+chassis.wait_drive();
+Wings.set_value(1);
+delay(700);
+intakeMotor = 0;*/
+
+
+
 // offense
-  chassis.set_drive_pid(25, DRIVE_SPEED, true);
-  chassis.wait_drive(); //first ball in
-  chassis.set_drive_pid(-12, DRIVE_SPEED, true);
-  chassis.wait_drive();
-  chassis.set_turn_pid(-90, TURN_SPEED);
-  chassis.wait_drive();
-  chassis.set_drive_pid(11, DRIVE_SPEED, true);
-  chassis.wait_drive();
-  chassis.set_turn_pid(90, TURN_SPEED);
-  chassis.wait_drive();
-  chassis.set_drive_pid(38, DRIVE_SPEED, true);
-  chassis.wait_drive();
-  intakeMotor = 127;
-  delay(500);
-  intakeMotor = 0;
-  chassis.set_turn_pid(90, TURN_SPEED);
-  chassis.wait_drive();
-  chassis.set_drive_pid(14, DRIVE_SPEED, true);
-  chassis.wait_drive();  //second ball
+intakeMotor = 127;
+chassis.set_drive_pid(58, DRIVE_SPEED, true);
+chassis.wait_drive();
+delay(600);
+intakeMotor = 0;
+chassis.set_turn_pid(123, TURN_SPEED);
+chassis.wait_drive();
+Wings.set_value(1);
+intakeMotor = -127;
+delay(500);
+intakeMotor = 0;
+chassis.set_drive_pid(32, DRIVE_SPEED, true);
+chassis.wait_drive();
+Wings.set_value(0);
+chassis.set_drive_pid(-10, DRIVE_SPEED, true);
+chassis.wait_drive();
+chassis.set_turn_pid(270, TURN_SPEED);
+chassis.wait_drive();
+intakeMotor = 127;
+chassis.set_drive_pid(28, TURN_SPEED, true);
+delay(1700);
+intakeMotor = 0;
+chassis.wait_drive();
+chassis.set_drive_pid(-6, DRIVE_SPEED, true);
+chassis.wait_drive();
+chassis.set_turn_pid(175, TURN_SPEED);
+chassis.wait_drive();
+chassis.set_drive_pid(45, DRIVE_SPEED, true);
+chassis.wait_drive();
+chassis.set_turn_pid(80, TURN_SPEED);
+chassis.wait_drive();
+Wings.set_value(1);
+intakeMotor = -127;
+delay(500);
+intakeMotor = 0;
+chassis.set_drive_pid(18, DRIVE_SPEED, true);
+chassis.wait_drive();
+chassis.set_turn_pid(56, TURN_SPEED);
+chassis.wait_drive();
+Wings.set_value(0);
+chassis.set_drive_pid(26, DRIVE_SPEED, true);
+chassis.wait_drive();
+chassis.set_drive_pid(-15, DRIVE_SPEED, true);
+chassis.wait_drive();
+
 
 }
 
@@ -230,7 +316,7 @@ void opcontrol() {
       intakeMotor = 0;
     }
     if(master.get_digital(DIGITAL_L1) == 1){
-			cataMotor = 127;
+			cataMotor = 115;
 		}
 		else{
 			if(cataRotation.get_angle() < 17430){
