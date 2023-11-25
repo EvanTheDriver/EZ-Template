@@ -1,11 +1,12 @@
 #include "main.h"
-pros::Motor cataMotor(11,1);
-pros::Motor intakeMotor(9,1); 
+pros::Motor cataMotor(18,1);
+pros::Motor intakeMotor(2,1); 
 pros::Controller master(pros::E_CONTROLLER_MASTER);
 
-pros::Rotation cataRotation(1);
+pros::Rotation cataRotation(4);
 
-pros::ADIDigitalOut Wings(1);
+pros::ADIDigitalOut Wings(8);
+pros::ADIDigitalOut Lift(7);
 
 
 /**
@@ -19,14 +20,14 @@ pros::ADIDigitalOut Wings(1);
 Drive chassis (
   // Left Chassis Ports (negative port will reverse it!)
   //   the first port is the sensored port (when trackers are not used!)
-  {-19, -16, 18}
+  {-10, -14, 13}
 
   // Right Chassis Ports (negative port will reverse it!)
   //   the first port is the sensored port (when trackers are not used!)
-  ,{14, 12, -13}
+  ,{1, 11, -12}
 
   // IMU Port
-  ,15
+  ,19
 
   // Wheel Diameter (Remember, 4" wheels are actually 4.125!)
   //    (or tracking wheel diameter)
@@ -191,26 +192,28 @@ chassis.wait_drive();
 chassis.set_drive_pid(-12, DRIVE_SPEED, true);*/
 
 //defence
-/*intakeMotor = 127;
+intakeMotor = 127;
 chassis.set_drive_pid(50.5, DRIVE_SPEED, true);
 chassis.wait_drive();
 delay(700);
 intakeMotor = 0;
 chassis.set_drive_pid(-57, DRIVE_SPEED, true);
 chassis.wait_drive();
-chassis.set_turn_pid(-52, TURN_SPEED);
+chassis.set_turn_pid(-56, TURN_SPEED);
 chassis.wait_drive();
 Wings.set_value(1);
-chassis.set_drive_pid(24, DRIVE_SPEED, true);
+chassis.set_drive_pid(14, DRIVE_SPEED, true);
+chassis.wait_drive();
+chassis.set_turn_pid(15, TURN_SPEED);
 chassis.wait_drive();
 Wings.set_value(0);
 chassis.set_turn_pid(-43, TURN_SPEED);
 chassis.wait_drive();
-chassis.set_drive_pid(19, DRIVE_SPEED, true);
+chassis.set_drive_pid(26, DRIVE_SPEED, true);
 chassis.wait_drive();
 chassis.set_drive_pid(-8, DRIVE_SPEED, true);
 chassis.wait_drive();
-chassis.set_turn_pid(78, TURN_SPEED);
+chassis.set_turn_pid(75, TURN_SPEED);
 chassis.wait_drive();
 chassis.set_drive_pid(35, DRIVE_SPEED, true);
 chassis.wait_drive();
@@ -219,55 +222,57 @@ chassis.set_drive_pid(17, DRIVE_SPEED, true);
 chassis.wait_drive();
 Wings.set_value(1);
 delay(700);
-intakeMotor = 0;*/
+intakeMotor = 0;
 
 
 
 // offense
-intakeMotor = 127;
-chassis.set_drive_pid(58, DRIVE_SPEED, true);
-chassis.wait_drive();
-delay(600);
-intakeMotor = 0;
-chassis.set_turn_pid(123, TURN_SPEED);
-chassis.wait_drive();
-Wings.set_value(1);
-intakeMotor = -127;
-delay(500);
-intakeMotor = 0;
-chassis.set_drive_pid(32, DRIVE_SPEED, true);
-chassis.wait_drive();
-Wings.set_value(0);
-chassis.set_drive_pid(-10, DRIVE_SPEED, true);
-chassis.wait_drive();
-chassis.set_turn_pid(270, TURN_SPEED);
-chassis.wait_drive();
-intakeMotor = 127;
-chassis.set_drive_pid(28, TURN_SPEED, true);
-delay(1700);
-intakeMotor = 0;
-chassis.wait_drive();
-chassis.set_drive_pid(-6, DRIVE_SPEED, true);
-chassis.wait_drive();
-chassis.set_turn_pid(175, TURN_SPEED);
-chassis.wait_drive();
-chassis.set_drive_pid(45, DRIVE_SPEED, true);
-chassis.wait_drive();
-chassis.set_turn_pid(80, TURN_SPEED);
-chassis.wait_drive();
-Wings.set_value(1);
-intakeMotor = -127;
-delay(500);
-intakeMotor = 0;
-chassis.set_drive_pid(18, DRIVE_SPEED, true);
-chassis.wait_drive();
-chassis.set_turn_pid(56, TURN_SPEED);
-chassis.wait_drive();
-Wings.set_value(0);
-chassis.set_drive_pid(26, DRIVE_SPEED, true);
-chassis.wait_drive();
-chassis.set_drive_pid(-15, DRIVE_SPEED, true);
-chassis.wait_drive();
+// intakeMotor = 127;
+// chassis.set_drive_pid(58, DRIVE_SPEED, true);
+// chassis.wait_drive();
+// delay(600);
+// intakeMotor = 0;
+// chassis.set_turn_pid(123, TURN_SPEED);
+// chassis.wait_drive();
+// Wings.set_value(1);
+// intakeMotor = -127;
+// delay(500);
+// intakeMotor = 0;
+// chassis.set_drive_pid(32, DRIVE_SPEED, true);
+// chassis.wait_drive();
+// Wings.set_value(0);
+// chassis.set_drive_pid(-10, DRIVE_SPEED, true);
+// chassis.wait_drive();
+// chassis.set_turn_pid(270, TURN_SPEED);
+// chassis.wait_drive();
+// intakeMotor = 127;
+// chassis.set_drive_pid(28, TURN_SPEED, true);
+// delay(1700);
+// intakeMotor = 0;
+// chassis.wait_drive();
+// chassis.set_drive_pid(-6, DRIVE_SPEED, true);
+// chassis.wait_drive();
+// chassis.set_turn_pid(175, TURN_SPEED);
+// chassis.wait_drive();
+// chassis.set_drive_pid(45, DRIVE_SPEED, true);
+// chassis.wait_drive();
+// chassis.set_turn_pid(80, TURN_SPEED);
+// chassis.wait_drive();
+// Wings.set_value(1);
+// intakeMotor = -127;
+// delay(500);
+// intakeMotor = 0;
+// chassis.set_drive_pid(18, DRIVE_SPEED, true);
+// chassis.wait_drive();
+// chassis.set_drive_pid(-7, DRIVE_SPEED, true);
+// chassis.wait_drive();
+// Wings.set_value(0);
+// chassis.set_turn_pid(56, TURN_SPEED);
+// chassis.wait_drive();
+// chassis.set_drive_pid(35, DRIVE_SPEED, true);
+// chassis.wait_drive();
+// chassis.set_drive_pid(-15, DRIVE_SPEED, true);
+// chassis.wait_drive();
 
 
 }
@@ -289,14 +294,15 @@ chassis.wait_drive();
  */
 void opcontrol() {
   bool  wingPosition= false;
+  bool  liftPosition = false;
   // This is preference to what you like to drive on.
   chassis.set_drive_brake(MOTOR_BRAKE_COAST);
 
   while (true) {
 
     // chassis.tank(); // Tank control
-    // chassis.arcade_standard(ez::SPLIT); // Standard split arcade
-    chassis.arcade_standard(ez::SINGLE); // Standard single arcade
+     chassis.arcade_standard(ez::SPLIT); // Standard split arcade
+    //chassis.arcade_standard(ez::SINGLE); // Standard single arcade
     // chassis.arcade_flipped(ez::SPLIT); // Flipped split arcade
     // chassis.arcade_flipped(ez::SINGLE); // Flipped single arcade
 
@@ -305,7 +311,12 @@ void opcontrol() {
         Wings.set_value(wingPosition);
     }
 
+    if (master.get_digital_new_press(DIGITAL_A)){
+        liftPosition = !liftPosition;
+        Lift.set_value(liftPosition);
+    }
 
+    
     if (master.get_digital(DIGITAL_R1) == 1){
         intakeMotor = 127;
     }
@@ -319,7 +330,7 @@ void opcontrol() {
 			cataMotor = 115;
 		}
 		else{
-			if(cataRotation.get_angle() < 17430){
+			if(cataRotation.get_angle() < 4600 || cataRotation.get_angle() > 35000){
 				cataMotor = 120;
 			}
 			else{
